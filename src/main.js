@@ -1,6 +1,7 @@
 import './style.css'
 import * as THREE from 'three'
-import {addDefaultMeshes} from './addDefaultMeshes'
+import {addDefaultMeshes, addStandardMeshes} from './addDefaultMeshes'
+import {addLight} from './addLight'
 import { add } from 'three/examples/jsm/libs/tween.module.js';
 
 //three enssentials: scene, camera, renderer
@@ -9,12 +10,11 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 
-//const mesh = addDefaultMeshes();
-//scene.add(mesh);
 
 //parent varieble
 //meshes is the global container
 const meshes = {}
+const lights = {}
 
 init()
 function init(){
@@ -23,33 +23,39 @@ function init(){
   document.body.appendChild(renderer.domElement);
   camera.position.z = 5;
 
+  lights.default = addLight()
+  scene.add(lights.default);
+
   //here we populate our meshes container
   //creating a varieble to the meshes container
   meshes.default = addDefaultMeshes();
   meshes.default.position.x = 2;
 
-  //creating the 2nd mesh
-  meshes.default2 = addDefaultMeshes();
-  meshes.default2.position.x = -2;
-
-  //creating the 3rd mesh
-  meshes.default3 = addDefaultMeshes();
-  meshes.default3.position.y = 2;
+  meshes.standard = addStandardMeshes();
+  meshes.standard.position.x = -2;
 
   console.log(meshes.default)
 
   //add meshes to our scene
   scene.add(meshes.default);
-  scene.add(meshes.default2);
-  scene.add(meshes.default3);
+  scene.add(meshes.standard);
 
+  resize()
   animate()
+}
+
+function resize(){
+  window.addEventListener('resize', () => {
+	renderer.setSize(window.innerWidth, window.innerHeight)
+	camera.aspect = window.innerWidth / window.innerHeight
+	camera.updateProjectionMatrix()
+	})
+
 }
 
 function animate(){
   requestAnimationFrame(animate);
   meshes.default.rotation.x += 0.01;
-  meshes.default2.rotation.y += 0.01;
-  meshes.default3.rotation.z += 0.01;
+  meshes.standard.rotation.x += 0.01;
   renderer.render(scene, camera);
 }
