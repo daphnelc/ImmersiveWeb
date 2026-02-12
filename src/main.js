@@ -23,6 +23,7 @@ function init(){
   document.body.appendChild(renderer.domElement);
   camera.position.z = 5;
 
+  //adding lights
   lights.default = addLight()
   scene.add(lights.default);
 
@@ -30,14 +31,10 @@ function init(){
   //creating a varieble to the meshes container
   meshes.default = addDefaultMeshes();
   meshes.default.position.x = 2;
+  scene.add(meshes.default);
 
   meshes.standard = addStandardMeshes();
   meshes.standard.position.x = -2;
-
-  console.log(meshes.default)
-
-  //add meshes to our scene
-  scene.add(meshes.default);
   scene.add(meshes.standard);
 
   resize()
@@ -50,7 +47,6 @@ function resize(){
 	camera.aspect = window.innerWidth / window.innerHeight
 	camera.updateProjectionMatrix()
 	})
-
 }
 
 function animate(){
