@@ -1,7 +1,8 @@
 import './style.css'
 import * as THREE from 'three'
-import {addDefaultMeshes, addStandardMeshes} from './addDefaultMeshes'
-import {addLight} from './addLight'
+import { addDefaultMeshes, addStandardMeshes } from './addDefaultMeshes'
+import { addLight } from './addLight'
+import Model from './model'
 import { add } from 'three/examples/jsm/libs/tween.module.js';
 
 //three enssentials: scene, camera, renderer
@@ -17,7 +18,7 @@ const meshes = {}
 const lights = {}
 
 init()
-function init(){
+function init() {
   //all the setup 
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
@@ -37,19 +38,34 @@ function init(){
   meshes.standard.position.x = -2;
   scene.add(meshes.standard);
 
+  instances()
   resize()
   animate()
 }
 
-function resize(){
-  window.addEventListener('resize', () => {
-	renderer.setSize(window.innerWidth, window.innerHeight)
-	camera.aspect = window.innerWidth / window.innerHeight
-	camera.updateProjectionMatrix()
-	})
+function instances() {
+  //where all my 3d models are loaded
+  const flower = new Model({
+    url: 'flower.glb',
+    scene: scene,
+    meshes: meshes,
+    name: 'flower',
+    scale: new THREE.Vector3(2, 2, 2),
+    position: new THREE.Vector3(0, -0.8, 3),
+    replace: true,
+  })
+  flower.init()
 }
 
-function animate(){
+function resize() {
+  window.addEventListener('resize', () => {
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+  })
+}
+
+function animate() {
   requestAnimationFrame(animate);
   meshes.default.rotation.x += 0.01;
   meshes.standard.rotation.x += 0.01;
